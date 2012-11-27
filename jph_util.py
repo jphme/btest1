@@ -4,9 +4,11 @@ import time
 import pandas as pd
 import numpy as np
 import datetime as dt
+import matplotlib.pyplot as plt
+import os
+import pylab
 
 def load_eviews(name):
-    timeofday=dt.timedelta(hours=15)
     df=pd.read_csv(name)
 
     df['Z_DATE_TEST'] = (df['Z_DATE_TEST']-719162)*(3600*24)
@@ -26,6 +28,41 @@ def read_symbols(s_symbols_file):
 
     return ls_symbols
 
+def closetoclose(nds):
+    s= np.shape(nds)
+    if len(s)==1:
+        nds=np.expand_dims(nds,1)
+    nds[0:-1, :] = (nds[1:, :] / nds[0:-1]) - 1
+    nds[-1, :] = np.zeros(nds.shape[1])
+
+def closetoopen(nds,open):
+    s= np.shape(nds)
+    if len(s)==1:
+        nds=np.expand_dims(nds,1)
+    t= np.shape(open)
+    if len(t)==1:
+        open=np.expand_dims(open,1)
+    nds[0:-1, :] = (open[1:, :] / nds[0:-1]) - 1
+    nds[-1, :] = np.zeros(nds.shape[1])
+
+def cum_return(returns):
+    cumret=pd.Series(np.zeros(len(returns)), index=returns.index)
+    cumret[0]=1
+    for i in range(len(returns)-1):
+        cumret[i+1]=cumret[i]+cumret[i]*returns[i+1]
+    return cumret
+
+def plotline(returns,label="Returns",filename="returns.png", avg=0):
+    plt.clf()
+    newtimestamps = returns.index
+    plt.plot(newtimestamps,returns.values)
+    if avg:
+        summe = pd.rolling_sum(returns,avg,min_periods=avg)
+        plt.plot(newtimestamps,summe.values)
+    plt.ylabel(label)
+    plt.xlabel('Date')
+    pylab.savefig(filename,format='png')
+    os.system("xdg-open "+filename)
 
 if __name__=="__main__":
     x= load_eviews('z_index_g3.csv')
