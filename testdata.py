@@ -14,15 +14,21 @@ import matplotlib.pyplot as plt
 import pylab
 import os
 
-dataobj = da.DataAccess('Quantquote')
+store=pandas.HDFStore('sp500.h5')
 
-startday = dt.datetime(2012,1,3)
-endday = dt.datetime(2012,1,5)
+high=store['qq_sp500_high']
+
+print high.tail()[high.columns[:5]]
+
+
+print high[high.columns[:5]].ix['2012-09']
+
+print high[high.columns[:5]].ix[pandas.date_range('5/1/2012 16:00:00','5/10/2012 16:00:00',freq='B')]
+
+
+startday = dt.datetime(2012,5,1)
+endday = dt.datetime(2012,5,10)
 timeofday=dt.timedelta(hours=16)
 timestamps = du.getNYSEdays(startday,endday,timeofday)
-symbols=dataobj.get_all_symbols()
-symbols=symbols[:5]
-symbols=["A","AA","AAPL"]
-close = dataobj.get_data_hardread(timestamps, symbols, "earnings")
 
-print close
+print high[high.columns[:5]].ix[timestamps]
