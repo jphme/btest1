@@ -14,9 +14,15 @@ import matplotlib.pyplot as plt
 import pylab
 import os
 
-store=pandas.HDFStore('sp500.h5')
+store=pandas.HDFStore('sp500_data.h5')
 
-high=store['qq_sp500_high']
+
+pnl=store['qq_sp500']
+print pnl
+
+print pnl.ix[['low','high'],'1/7/2008 16:00:00','AAPL']
+
+high=store['qq_sp500'].ix['high',:,:]
 
 print high.tail()[high.columns[:5]]
 
@@ -32,3 +38,13 @@ timeofday=dt.timedelta(hours=16)
 timestamps = du.getNYSEdays(startday,endday,timeofday)
 
 print high[high.columns[:5]].ix[timestamps]
+
+spy=store['SPY']
+
+startday = dt.datetime(2005,1,1)
+endday = dt.datetime(2012,10,1)
+timestamps = du.getNYSEdays(startday,endday,timeofday)
+
+spy['close'].ix[timestamps].plot()
+pandas.rolling_mean(spy['close'].ix[timestamps],200).plot()
+plt.show()

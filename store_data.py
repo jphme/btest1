@@ -12,9 +12,9 @@ import matplotlib.pyplot as plt
 
 
 dataobj = da.DataAccess('Quantquote')
-startday = dt.datetime(2008,1,1)
-#endday = dt.datetime(2012,10,26)  #ende quantquote
-endday = dt.datetime(2008,1,10)
+startday = dt.datetime(2000,1,1)
+endday = dt.datetime(2012,10,26)  #ende quantquote
+#endday = dt.datetime(2008,1,10)
 timeofday=dt.timedelta(hours=16)
 timestamps = du.getNYSEdays(startday,endday,timeofday)
 
@@ -22,7 +22,7 @@ timestamps = du.getNYSEdays(startday,endday,timeofday)
 symbols=dataobj.get_all_symbols()
 #symbols=["ETFC","WDC","X","LSI","DHI","M"]
 #symbols = jp.read_symbols('russell.txt')
-symbols=symbols[:5]
+#symbols=symbols[:5]
 #symbols.append('SPY')
 
 
@@ -40,15 +40,15 @@ pnl=pandas.Panel({'open':open,'high':high,'low':low,'close':close,'volume':volum
 
 print pnl
 
-print pnl.to_frame()
+"""print pnl.to_frame()
 print
 print pnl['volume']
-print
+print"""
 print pnl.ix[['low','high'],'1/7/2008 16:00:00','AAPL']
 
+store=pandas.HDFStore('sp500_data.h5')
 
-store=pandas.HDFStore('sp500.h5')
-
+store['qq_sp500']=pnl
 #store['qq_sp500_high']=high
 #store['qq_sp500_actclose']=actclose
 
@@ -65,4 +65,5 @@ spy=pandas.concat([open,high,low,close,volume],axis=1,keys=["open","high",'low',
 spy.columns=["open","high",'low','close','volume']
 print spy
 
+store['SPY']=spy
 #spy=pandas.DataFrame((dict(field,dataobj2.get_data(timestamps, symbols, field)) for field in ['open','high','low','close','volume','actual_close']))
