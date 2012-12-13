@@ -8,7 +8,7 @@ import qstkutil.qsdateutil as du
 import datetime as dt
 import qstkutil.tsutil as tsu
 import jph_util as jp
-
+import matplotlib.pyplot as plt
 
 def findEvents(symbols, timestamps, high, actclose):
     highindi=(actclose-high)/high
@@ -60,7 +60,7 @@ def calc_returns(matrix,actclose):
 
 dataobj = da.DataAccess('Quantquote')
 startday = dt.datetime(2008,1,1)
-endday = dt.datetime(2012,9,30)
+endday = dt.datetime(2012,10,26)
 timeofday=dt.timedelta(hours=16)
 timestamps = du.getNYSEdays(startday,endday,timeofday)
 
@@ -75,7 +75,8 @@ symbols=dataobj.get_all_symbols()
 print "Reading data..."
 high = dataobj.get_data(timestamps, symbols, "high")
 actclose = dataobj.get_data(timestamps, symbols, "actual_close")
-#print actclose.tail()[symbols[:5]]
+print actclose.tail()[symbols[:5]]
+print high.tail()[symbols[:5]]
 
 eventMatrix = findEvents(symbols,timestamps,high,actclose)
 
@@ -94,9 +95,11 @@ print "Max Drawdown:"
 print tsu.get_max_draw_down(renditereihe)
 print
 
-jp.plotline(rendite,'Returns (Close to Open)','closetoopen.png',20)
-jp.plotline(renditereihe,'Cum Returns (Close to Open)','closetoopen_cum.png')
+#jp.plotline(rendite,'Returns (Close to Open)','closetoopen.png',20)
 
-
-
+#jp.plotline(renditereihe,'Cum Returns (Close to Open)','closetoopen_cum.png')
+rendite.plot()
+plt.show()
+renditereihe.plot()
+plt.show()
 

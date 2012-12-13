@@ -61,8 +61,9 @@ def plotline(returns,label="Returns",filename="returns.png", avg=0):
         plt.plot(newtimestamps,summe.values)
     plt.ylabel(label)
     plt.xlabel('Date')
-    pylab.savefig(filename,format='png')
-    os.system("xdg-open "+filename)
+    plt.show()
+    #pylab.savefig(filename,format='png')
+    #os.system("xdg-open "+filename)
 
 if __name__=="__main__":
     x= load_eviews('z_index_g3.csv')
