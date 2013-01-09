@@ -45,9 +45,9 @@ for symbol in bollinger.columns:
     timeold=bollinger.index[0]
     for time in bollinger.index[1:]:
         try:
-            if bollinger[symbol][time]>upper[symbol][time] and bollinger[symbol][timeold]!=1:
+            if bollinger[symbol][time]>upper[symbol][time] and bollinger_indi[symbol][timeold]<1:
                 bollinger[symbol][time]=1
-            elif bollinger[symbol][time]<lower[symbol][time] and bollinger[symbol][timeold]!=-1:
+            elif bollinger[symbol][time]<lower[symbol][time] and bollinger_indi[symbol][timeold]>0:
                 bollinger[symbol][time]=-1
             else:
                 bollinger[symbol][time]=0

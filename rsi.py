@@ -68,17 +68,22 @@ rs=avgain/avloss
 rsi=100-(100/(1+rs))
 rsi=rsi.replace(np.NAN,50)
 
-def filter(x):
-    if x>70:
-        x=1
-    elif x<30:
-        x=-1
-    else:
-        x=0
-    return x
+rsi_signal=copy.deepcopy(rsi)
 
-rsi_signal=rsi.applymap(filter)
-
+for symbol in rsi.columns:
+    print symbol
+    timeold=rsi.index[0]
+    for time in rsi.index[1:]:
+        try:
+            if rsi[symbol][time]>70 and rsi[symbol][timeold]<=70:
+                rsi_signal[symbol][time]=1
+            elif rsi[symbol][time]<30 and rsi[symbol][timeold]>=30:
+                rsi_signal[symbol][time]=-1
+            else:
+                rsi_signal[symbol][time]=0
+        except:
+            rsi_signal[symbol][time]=0
+        timeold=time
 
 startday = dt.datetime(2000,2,1)
 endday = dt.datetime(2012,10,1)
